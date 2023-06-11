@@ -27,6 +27,7 @@ func main() {
 	content, err := os.ReadFile(jsonFile)
 	if err != nil {
 		log.Fatal("Error when opening json file: ", err)
+		os.Exit(1)
 	}
 
 	jsonStr := jsontranslator.TranslateJson(content, langFrom, langTo)
