@@ -9,7 +9,7 @@ import (
 /*
 * Usage:
 *
-* $ go run jsontranslator.go test.json en de
+* $ go run main.go test.json en de
  */
 
 func main() {
