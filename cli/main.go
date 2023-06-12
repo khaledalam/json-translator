@@ -4,44 +4,67 @@ import (
 	jsontranslator "github.com/khaledalam/json-translator"
 	"log"
 	"os"
+	"strings"
 )
 
 /*
 * Usage:
 *
-* $ go run main.go test.json en de
+* $ go run main.go test.json en de it
  */
 
 func main() {
 	if len(os.Args) < 4 {
-		log.Fatal("Json file or from_to langs arguments are missing.")
+		log.Fatal("Json file or languages arguments are missing.")
 		os.Exit(0)
 	}
 
-	// json file that we want to translate
+	// Single translation:
+	//singleTranslationMain()
+
+	// Multiple translation:
+	multipleTranslationMain()
+}
+
+func singleTranslationMain() {
 	jsonFile := os.Args[1]
-	langFrom := os.Args[2]
-	langTo := os.Args[3]
+	languageFrom := os.Args[2]
+	languageTo := os.Args[3]
 
-	// Let's first read the `config.json` file
-	content, err := os.ReadFile(jsonFile)
-	if err != nil {
-		log.Fatal("Error when opening json file: ", err)
-		os.Exit(1)
-	}
-
-	jsonStr := jsontranslator.TranslateJson(content, langFrom, langTo)
+	jsonStr := jsontranslator.TranslateJsonFiles(jsonFile, 5, languageFrom, languageTo)
 
 	if jsonStr == nil {
 		log.Fatal("Error: ", jsonStr)
+		os.Exit(1)
+	}
+
+	err := os.WriteFile("Translated_"+languageFrom+"_"+languageTo+"_"+"JsonFile.json", jsonStr, 0644)
+	if err != nil {
+		log.Fatal("Error during saving the translated file: ", err)
 		os.Exit(2)
 	}
 
-	err = os.WriteFile("OutputTranslatedJsonFile.json", jsonStr, 0644)
+	log.Println("Finish!")
+}
+
+func multipleTranslationMain() {
+	jsonFile := os.Args[1]
+	languageFrom := os.Args[2]
+	languagesTo := os.Args[3:]
+
+	jsonStr := jsontranslator.TranslateJsonFiles(jsonFile, 5, languageFrom, languagesTo...)
+
+	if jsonStr == nil {
+		log.Fatal("Error: ", jsonStr)
+		os.Exit(1)
+	}
+
+	err := os.WriteFile("Translated_"+languageFrom+"_"+strings.Join(languagesTo, "-")+"_"+"JsonFile.json", jsonStr, 0644)
 	if err != nil {
 		log.Fatal("Error during saving the translated file: ", err)
-		os.Exit(3)
+		os.Exit(2)
 	}
 
 	log.Println("Finish!")
+
 }

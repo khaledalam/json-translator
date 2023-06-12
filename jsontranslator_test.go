@@ -7,24 +7,51 @@ import (
 	"testing"
 )
 
-func TestTranslateJson(t *testing.T) {
+func TestTranslateJsonFile(t *testing.T) {
 
-	jsonFile := "test.json"
-	langFrom := "en"
-	langTo := "de"
-
-	// Let's first read the `config.json` file
-	content, err := os.ReadFile(jsonFile)
+	path, err := os.Getwd()
 	if err != nil {
-		log.Fatal("[Testing]: Error when opening json file: ", err)
+		log.Println(err)
 	}
 
-	result := TranslateJson(content, langFrom, langTo)
+	jsonFile := path + "/cli/test.json"
+	languageFrom := "en"
+	languageTo := "de"
+
+	result := TranslateJsonFile(jsonFile, 5, languageFrom, languageTo)
 
 	must := `{
   "Account": "Konto",
   "Home": "Heim"
 }`
 	assert.Equal(t, must, string(result), "Must be equal.")
+	log.Println("-----")
+}
+
+func TestTranslateJsonFiles(t *testing.T) {
+
+	path, err := os.Getwd()
+	if err != nil {
+		log.Println(err)
+	}
+
+	jsonFile := path + "/cli/test.json"
+	languageFrom := "en"
+	languagesTo := []string{"de", "it"}
+
+	result := TranslateJsonFiles(jsonFile, 5, languageFrom, languagesTo...)
+
+	must := `{
+  "de": {
+    "Account": "Konto",
+    "Home": "Heim"
+  },
+  "it": {
+    "Account": "Account",
+    "Home": "Casa"
+  }
+}`
+	assert.Equal(t, must, string(result), "Must be equal.")
+	log.Println("-----")
 
 }
