@@ -10,7 +10,7 @@
 ### Install:
 
 ```shell
-$ go get github.com/khaledalam/json-translator
+go get github.com/khaledalam/json-translator
 ```
 
 ### Args:
@@ -43,7 +43,7 @@ $ go get github.com/khaledalam/json-translator
 
 
 ```bash
-$ go run main.go $(pwd)/cli/test.json 5 en de
+go run main.go $(pwd)/cli/test.json 5 en de
 ```
 
 &rightarrow; output file from &uparrow; command `Translated_en_de.json`:
@@ -57,7 +57,7 @@ $ go run main.go $(pwd)/cli/test.json 5 en de
 ---
 
 ```bash
-$ go run main.go $(pwd)/cli/test.json 5 en de it
+go run main.go $(pwd)/cli/test.json 5 en de it
 ```
 &rightarrow; output file from &uparrow; command `Translated_en_de_it.json`:
 ```json
@@ -77,18 +77,22 @@ $ go run main.go $(pwd)/cli/test.json 5 en de it
 ### Testing
 
 ```shell
-$ make test
+make test
 ```
 
 ```
-[en => de] Done:  1 / 2
-[en => de] Done:  2 / 2
------
-[en => de] Done:  1 / 2
-[en => de] Done:  2 / 2
-[en => it] Done:  1 / 2
-[en => it] Done:  2 / 2
------
+2023/06/13 04:31:32 [en => de] Done:  1 / 2
+2023/06/13 04:31:33 [en => de] Done:  2 / 2
+2023/06/13 04:31:33 -----
+2023/06/13 04:31:33 [en => de] Done:  1 / 2
+2023/06/13 04:31:33 [en => de] Done:  2 / 2
+2023/06/13 04:31:33 [en => it] Done:  1 / 2
+2023/06/13 04:31:33 [en => it] Done:  2 / 2
+2023/06/13 04:31:33 -----
+2023/06/13 04:31:33 Error: when reading json file. open invalid/json/file/path/a.json: no such file or directory
+2023/06/13 04:31:33 Error: when reading json file. [multi]
+2023/06/13 04:31:33 -----
 PASS
-ok      github.com/khaledalam/json-translator   2.144s
+	github.com/khaledalam/json-translator	coverage: 70.8% of statements
+ok  	github.com/khaledalam/json-translator	0.682s
 ```
