@@ -4,44 +4,46 @@ import (
 	jsontranslator "github.com/khaledalam/json-translator"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
 /*
 * Usage:
 *
-* $ go run main.go test.json en de it
+* $ go run main.go test.json 5 en de it
  */
 
 func main() {
 	if len(os.Args) < 4 {
 		log.Fatal("Json file or languages arguments are missing.")
-		os.Exit(0)
 	}
 
 	// Single translation:
-	//singleTranslationMain()
+	singleTranslationMain()
 
 	// Multiple translation:
-	multipleTranslationMain()
+	//multipleTranslationMain()
 }
 
 func singleTranslationMain() {
 	jsonFile := os.Args[1]
-	languageFrom := os.Args[2]
-	languageTo := os.Args[3]
+	intervalInMillisecond, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		log.Fatal("Error: wrong interval argument.", err)
+	}
+	languageFrom := os.Args[3]
+	languageTo := os.Args[4]
 
-	jsonStr := jsontranslator.TranslateJsonFiles(jsonFile, 5, languageFrom, languageTo)
+	jsonStr := jsontranslator.TranslateJsonFile(jsonFile, intervalInMillisecond, languageFrom, languageTo)
 
 	if jsonStr == nil {
 		log.Fatal("Error: ", jsonStr)
-		os.Exit(1)
 	}
 
-	err := os.WriteFile("Translated_"+languageFrom+"_"+languageTo+"_"+"JsonFile.json", jsonStr, 0644)
+	err = os.WriteFile("Translated_"+languageFrom+"_"+languageTo+".json", jsonStr, 0644)
 	if err != nil {
-		log.Fatal("Error during saving the translated file: ", err)
-		os.Exit(2)
+		log.Fatal("Error during saving the translated file.", err)
 	}
 
 	log.Println("Finish!")
@@ -49,22 +51,23 @@ func singleTranslationMain() {
 
 func multipleTranslationMain() {
 	jsonFile := os.Args[1]
-	languageFrom := os.Args[2]
-	languagesTo := os.Args[3:]
+	intervalInMillisecond, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		log.Fatal("Error: wrong interval argument.", err)
+	}
+	languageFrom := os.Args[3]
+	languagesTo := os.Args[4:]
 
-	jsonStr := jsontranslator.TranslateJsonFiles(jsonFile, 5, languageFrom, languagesTo...)
+	jsonStr := jsontranslator.TranslateJsonFiles(jsonFile, intervalInMillisecond, languageFrom, languagesTo...)
 
 	if jsonStr == nil {
 		log.Fatal("Error: ", jsonStr)
-		os.Exit(1)
 	}
 
-	err := os.WriteFile("Translated_"+languageFrom+"_"+strings.Join(languagesTo, "-")+"_"+"JsonFile.json", jsonStr, 0644)
+	err = os.WriteFile("Translated_"+languageFrom+"_"+strings.Join(languagesTo, "-")+".json", jsonStr, 0644)
 	if err != nil {
-		log.Fatal("Error during saving the translated file: ", err)
-		os.Exit(2)
+		log.Fatal("Error during saving the translated file.", err)
 	}
 
 	log.Println("Finish!")
-
 }

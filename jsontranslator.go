@@ -25,24 +25,25 @@ func TranslateJsonFile(jsonFile string, intervalInMillisecond int, languageFrom 
 	// Read json file
 	content, err := os.ReadFile(jsonFile)
 	if err != nil {
-		log.Fatal("Error: when reading json file: ", err)
+		log.Println("Error: when reading json file.", err)
 		return nil
 	}
 
 	// Validate languageFrom ISO code
 	if iso6391.ValidCode(languageFrom) != true {
-		log.Fatal("Error: invalid languageFrom code, use ISO 639‑1 codes ", err)
+		log.Println("Error: invalid languageFrom code, use ISO 639‑1 codes.", err)
 		return nil
 	}
 
 	// Validate languageTo ISO code
 	if iso6391.ValidCode(languageTo) != true {
-		log.Fatal("Error: invalid languageTo code, use ISO 639‑1 codes ", err)
+		log.Println("Error: invalid languageTo code, use ISO 639‑1 codes.", err)
 		return nil
 	}
 
+	// Validate interval value [0 : 10k] milliseconds
 	if intervalInMillisecond < 0 || intervalInMillisecond > 10000 {
-		log.Fatal("Error: invalid interval range should be [0 : 10000].", err)
+		log.Println("Error: invalid interval range should be [0 : 10000] milliseconds.", err)
 		return nil
 	}
 
@@ -57,7 +58,7 @@ func TranslateJsonFile(jsonFile string, intervalInMillisecond int, languageFrom 
 	// Parse json file content
 	err = json.Unmarshal(content, &inputMap)
 	if err != nil {
-		log.Fatal("Error: during parsing json file: ", err)
+		log.Println("Error: during parsing json file [single].", err)
 		return nil
 	}
 
@@ -74,7 +75,7 @@ func TranslateJsonFile(jsonFile string, intervalInMillisecond int, languageFrom 
 	// Convert translated map to json object
 	jsonResult, err := json.MarshalIndent(outputMap, "", "  ")
 	if err != nil {
-		log.Fatal("Error: during converting translated map to json", err.Error())
+		log.Println("Error: during converting translated map to json.", err.Error())
 		return nil
 	}
 	return jsonResult
@@ -98,11 +99,15 @@ func TranslateJsonFiles(inputJsonFile string, intervalInMillisecond int, languag
 	for _, languageKey := range languagesTo {
 
 		res := TranslateJsonFile(inputJsonFile, intervalInMillisecond, languagesFrom, languageKey)
+		if res == nil {
+			log.Println("Error: when reading json file. [multi]")
+			return nil
+		}
 
 		mapVal := map[string]string{}
 		err := json.Unmarshal(res, &mapVal)
 		if err != nil {
-			log.Fatal("Error: during parsing json file [multi] ", err)
+			log.Println("Error: during parsing json file [multi].", err)
 			return nil
 		}
 
@@ -111,7 +116,7 @@ func TranslateJsonFiles(inputJsonFile string, intervalInMillisecond int, languag
 
 	jsonResult, err := json.MarshalIndent(outputMap, "", "  ")
 	if err != nil {
-		log.Fatal("Error: during converting translated map to json", err.Error())
+		log.Println("Error: during converting translated map to json.", err.Error())
 		return nil
 	}
 	return jsonResult

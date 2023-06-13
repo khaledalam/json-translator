@@ -1,75 +1,83 @@
 ## JsonTranslator
 
-#### Simple GoLang script that helps with translate json files using Google Translator.
+#### Simple Go module that helps with translating json files using Google Translator.
 
-## Usage:
-in cli folder
+[![Go Report Card](https://goreportcard.com/badge/github.com/khaledalam/json-translator)](https://goreportcard.com/report/github.com/khaledalam/json-translator)
+[![Go Reference](https://pkg.go.dev/badge/github.com/khaledalam/json-translator?status.svg)](https://pkg.go.dev/github.com/khaledalam/json-translator?status)
+![Test](https://github.com/khaledalam/json-translator/workflows/Test/badge.svg)
+
+
+### Install:
 
 ```shell
-# [file name] [interval in millisecond] [Language from] [Languages to]
-
-$ go run cli/main.go $(pwd)/cli/test.json en de
+$ go get github.com/khaledalam/json-translator
 ```
 
-### Single translate language
+### Args:
+
+- [x] `[source json file path]`
+- [x] `[interval in millisecond]` 
+- [x] `[Language_from]`
+- [x] `[Language_to 1] [Language_to 2] [Language_to n..]`
+
+### Flags:
+- [ ] --output=files
+---
+
+### Cli Examples:
+
+
+&rightarrow; input file `test.json`:
+```json
+{
+    "Home": "Home",
+    "Account": "Account"
+}
+```
+
+<div style="text-align: center">
+&downarrow; &downarrow; &downarrow; &downarrow;
+
+
+</div>
+
 
 ```bash
-go run main.go test.json en de
+$ go run main.go $(pwd)/cli/test.json 5 en de
 ```
 
-Input:
-
+&rightarrow; output file from &uparrow; command `Translated_en_de.json`:
 ```json
 {
-  "Home": "Home",
-  "Account": "Account"
-}
-```
-
-Output:
-
-```json
-{
-  "Account": "Konto",
-  "Home": "Heim"
-}
-```
-
-
-### Multiple translate languages
-
-```bash
-go run main.go test.json en de it
-```
-
-Input:
-```json
-{
-  "Home": "Home",
-  "Account": "Account"
-}
-```
-
-Output:
-
-```json
-{
-  "de": {
     "Account": "Konto",
     "Home": "Heim"
-  },
-  "it": {
-    "Account": "Account",
-    "Home": "Casa"
-  }
 }
 ```
 
+---
 
+```bash
+$ go run main.go $(pwd)/cli/test.json 5 en de it
+```
+&rightarrow; output file from &uparrow; command `Translated_en_de_it.json`:
+```json
+{
+    "de": {
+        "Account": "Konto",
+        "Home": "Heim"
+    },
+    "it": {
+        "Account": "Account",
+        "Home": "Casa"
+    }
+}
+```
+
+---
 ### Testing
 
 ```shell
-$ go test
+$ make test
 ```
 
 ```
